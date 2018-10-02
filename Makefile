@@ -5,7 +5,7 @@ HYPERVISOR_REVISION_VERSION = 1
 
 export BOARD:= ZEDBOARD
 export S_GUEST:= BARE_METAL
-export NS_GUEST:= LINUX
+export NS_GUEST:= BARE_METAL
 export CROSS_COMPILE:= arm-none-eabi-
 
 export SDK_PATH = $(CURDIR)
