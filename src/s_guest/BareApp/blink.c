@@ -45,6 +45,7 @@
 */
 
 #include<hw_zynq.h>
+#include<board.h>
 #include<printk.h>
 
 void led_blink( void * pvParameters );
@@ -57,7 +58,7 @@ int main() {
 	printk(" * Secure bare metal VM: running ... \n\t");
 
 	/** Generate tick every 1s */
-	tick_set(1000000);
+	tick_set(500000);
 
 	/* Calling Blinking Task (LED blink at 1s) */
 	led_blink((void*)0);
@@ -78,10 +79,18 @@ void led_blink( void * parameters ){
 
 	static uint32_t toggle;
 	/** 4GPIO (LED) in FPGA fabric */
+#ifdef USE_PL_GPIO	
 	static uint32_t *ptr = (uint32_t *) 0x41200000;
 
+#elif USE_MIO_GPIO
+	static uint32_t *ptr = (uint32_t *) MIO_DATA;
+#else 	
+	#error "GPIO ADDRESS NEEDS DEFINED!"
+#endif
+	
 	for( ;; ){
 		toggle ^=0xFF;
+		toggle &= (0x01 << 7);
 		*ptr = toggle;
 		YIELD()
 	}
