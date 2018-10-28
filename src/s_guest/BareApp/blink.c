@@ -86,7 +86,7 @@ void led_blink( void * parameters ){
 	static uint32_t toggle;
 	/** 4GPIO (LED) in FPGA fabric */
 #ifdef USE_PL_GPIO	
-	static uint32_t *ptr = (uint32_t *) 0x41210004;
+	static uint32_t *ptr = (uint32_t *) 0x41210000;
 
 #elif USE_MIO_GPIO
 	static uint32_t *ptr = (uint32_t *) MIO_DATA;
@@ -96,7 +96,9 @@ void led_blink( void * parameters ){
 	
 	for( ;; ){
 		toggle ^=0xFF;
+#ifdef USE_MIO_GPIO
 		toggle &= (0x01 << 7);
+#endif
 		*ptr = toggle;
 		YIELD()
 	}
