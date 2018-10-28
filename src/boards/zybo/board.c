@@ -60,6 +60,11 @@ uint32_t board_init(void){
 	/** Unlocking SLCR register */
 	write32( (void *)SLCR_UNLOCK, SLCR_UNLOCK_KEY);
 
+
+	/** Set up MIO7 for GPIO **/
+	write32( (void *)MIO_PIN_07, 0x0); //disable tri-state
+
+
 	/** Handling memory security */
 	write32( (void *)TZ_OCM_RAM0, 0xffffffff);
 	write32( (void *)TZ_OCM_RAM1, 0xffffffff);
@@ -69,27 +74,63 @@ uint32_t board_init(void){
 	printk("      * Memory security - OK  \n\t");
 
 	/** Handling devices security */
-	/* SDIO0 slave security (NS) */
-	write32( (void *)SECURITY2_SDIO0, 0x1);
-	/* SDIO1 slave security (NS) */
-	write32( (void *)SECURITY3_SDIO1, 0x1);
-	/* QSPI slave security (NS) */
-	write32( (void *)SECURITY4_QSPI, 0x1);
-	/* APB slave security (NS) */
+	/* SDIO0 slave security (S) */
+	write32( (void *)SECURITY2_SDIO0, 0x0);
+	printk(" /* SDIO0 slave security (NS) */ \n\t");
+	/* SDIO1 slave security (S) */
+	write32( (void *)SECURITY3_SDIO1, 0x0);
+	printk(" /* SDIO1 slave security (NS) */ \n\t");
+	/* QSPI slave security (S) */
+	write32( (void *)SECURITY4_QSPI, 0x0);
+	printk(" /* QSPI slave security (NS) */\n\t");	
+	/* APB slaves security (mixed) */
 	write32( (void *) SECURITY6_APBSL, 0x00007fff);
+	printk(" /* APB slave security (NS) */\n\t");	
 	/* DMA slave security (S) */
 	write32( (void *)TZ_DMA_NS, 0x0);
+	printk(" /* DMA slave security (S) */\n\t");	
 	write32( (void *)TZ_DMA_IRQ_NS, 0x0);
-	/* Ethernet security */
+	printk(" /* DMA slave security (S) IRQ */ \n\t");
+	/* SDIO security (S) */
+	write32( (void *)TZ_SDIO, 0x0);
+	printk("/* SDIO security (NS) */\n\t");
+	/* USB security (S) */
+	write32( (void *)TZ_USB, 0x0);
+	printk("/* USB (NS) */\n\t");
+	
+	/* Ethernet (GEM0 and GEM1) security (NS) */
 	write32( (void *)TZ_GEM, 0x3);
-	/* FPGA AFI AXI ports TrustZone */
+	printk("/* Ethernet (GEM0 and GEM1) security (NS) */\n\t");
+	/* FPGA Master security (NS) */
+	write32( (void *)TZ_FPGA_M, 0x3);
+	printk("/* FPGA Master security (Mixed) */\n\t");
+	/* FPGA AXI Ports security (NS) */
+	write32( (void *)TZ_FPGA_AFI, 0xF);
+	printk("/* FPGA AXI Ports security (Mixed) */\n\t");
+
+	/* M_AXI_GPO security (Mixed) */
+	write32( (void *)SECURITY_FSSW_S0, 0x1);
+	printk("/* M_AXI_GPO security (Mixed) */\n\t");
+
+	/* M_AXI_GP1 security (NS) */
+	write32( (void *)SECURITY_FSSW_S1, 0x1);
+	printk("/* M_AXI_GP1 security (NS) */\n\t");
+	
+	/* FPGA AFI AXI ports TrustZone (NS) */
 	write32( (void *)SECURITY_APB, 0x3F);
+	printk("/* FPGA AFI AXI ports TrustZone (NS)\n\t");
 	/* Handling more devices ... */
 	printk("      * Devices security - OK  \n\t");
 
 	/** Locking SLCR register */
 	write32( (void *)SLCR_LOCK, SLCR_LOCK_KEY);
 
+
+ 	write32( (void *)MIO_DIRM,(0x01 << 7) );
+	write32( (void *)MIO_OEN,(0x01 << 7) );
+	write32( (void *)MIO_DATA, (0x01 << 7));
+
+	
 	return TRUE;
 }
 

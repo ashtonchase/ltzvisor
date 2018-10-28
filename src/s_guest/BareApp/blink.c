@@ -55,6 +55,12 @@ int main() {
 	/** Initialize hardware */
 	hw_init();
 
+#ifdef USE_PL_GPIO	
+	static uint32_t *ptr = (uint32_t *) 0x41210004;
+	*ptr = 0x00; //set AXI GPIO to outputs
+#endif
+
+	
 	printk(" * Secure bare metal VM: running ... \n\t");
 
 	/** Generate tick every 1s */
@@ -80,7 +86,7 @@ void led_blink( void * parameters ){
 	static uint32_t toggle;
 	/** 4GPIO (LED) in FPGA fabric */
 #ifdef USE_PL_GPIO	
-	static uint32_t *ptr = (uint32_t *) 0x41200000;
+	static uint32_t *ptr = (uint32_t *) 0x41210004;
 
 #elif USE_MIO_GPIO
 	static uint32_t *ptr = (uint32_t *) MIO_DATA;

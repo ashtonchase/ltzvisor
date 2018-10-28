@@ -115,7 +115,7 @@
 #define MIO_DIRM (MIO_BASE + 0x204)
 #define MIO_OEN (MIO_BASE + 0x208)
 
-#define MIO_PIN_07 (SLCR_BASE + 0x71C)
+#define MIO_PIN_07 (SLCR_BASE + 0x71C) // MIO LED on Zedboard and Zybo
 
 
 

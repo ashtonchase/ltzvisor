@@ -29,14 +29,14 @@ ifeq ($(BOARD), ZEDBOARD)
 	export BOARD_DIR = zedboard
 	export ARM_ARCH = ARMV7
 	export ARM_CPU = CORTEX_A9
-	TARGET_CCFLAGS += -DCONFIG_ZYNQ=1
+	TARGET_CCFLAGS += -DCONFIG_ZYNQ=1 -DUSE_PL_GPIO
 	TARGET_ASMFLAGS += -DCONFIG_ZYNQ=1
 endif
 ifeq ($(BOARD), ZYBO)
 	export BOARD_DIR = zybo
 	export ARM_ARCH = ARMV7
 	export ARM_CPU = CORTEX_A9
-	TARGET_CCFLAGS += -DCONFIG_ZYNQ=1
+	TARGET_CCFLAGS += -DCONFIG_ZYNQ=1 -DUSE_PL_GPIO
 	TARGET_ASMFLAGS += -DCONFIG_ZYNQ=1
 endif
 
@@ -94,7 +94,7 @@ s_guest-object-mks=$(shell if [ -d $(s_guest_dir) ]; then find $(s_guest_dir) -i
 ifeq ($(S_GUEST), BARE_METAL)
 	export bm_core_dir=$(s_guest_dir)/BareApp
 	export bm_core_port_dir=$(bm_core_dir)/portable
-	# Setup list of objects for compilation
+# Setup list of objects for compilation
 	bm_core-mks=$(shell if [ -d $(bm_core_dir) ]; then find $(bm_core_dir) -iname "objects.mk" | sort -r; fi)
 	bm_core_port-mks=$(shell if [ -d $(bm_core_port_dir) ]; then find $(bm_core_port_dir) -iname "objects.mk" | sort -r; fi)
 endif
@@ -103,7 +103,7 @@ ifeq ($(S_GUEST), FREERTOS)
 	export freertos_core_apps_dir=$(freertos_core_dir)/apps
 	export freertos_portable_gcc_dir=$(freertos_core_dir)/portable/GCC
 	export freertos_portable_mem_dir=$(freertos_core_dir)/portable/MemMang
-	# Setup list of objects for compilation
+# Setup list of objects for compilation
 	freertos-core-mks=$(shell if [ -d $(freertos_core_dir) ]; then find $(freertos_core_dir) -iname "objects.mk" | sort -r; fi)
 	freertos-portable-gcc-mks=$(shell if [ -d $(freertos_portable_gcc_dir) ]; then find $(freertos_portable_gcc_dir) -iname "objects.mk" | sort -r; fi)
 	freertos-portable-mem-mks=$(shell if [ -d $(freertos_portable_mem_dir) ]; then find $(freertos_portable_mem_dir) -iname "objects.mk" | sort -r; fi)
@@ -194,7 +194,7 @@ endif
 ifeq ($(CONFIG_NEON_SUPPORT), y)
 	cflags+= -mfloat-abi=softfp -mfpu=neon
 endif
- 
+
 asflags= -Wall -D__ASSEMBLY__ -fno-common -mno-thumb-interwork -marm
 ifeq ($(DEBUG), y)
 	asflags += -g
@@ -223,7 +223,7 @@ endif
 .PHONY: all
 all: $(CONFIG_FILE) $(OFFSETS_FILE) $(targets-y)
 	echo 'LTZVisor ready!!'
-	
+
 $(bin_dir)/$(PROJECT_NAME).elf: $(final-objs-y) #$(KERNEL)
 	$(V)$(lib_ld) $(ldflags) $(final-objs-y) -o $@
 ifneq ($(DEBUG), y)
@@ -231,7 +231,7 @@ ifneq ($(DEBUG), y)
 endif
 	rm -f $(cpu_arch_dir)/asm-offsets.s;
 	rm -f $(final-objs-y)
-	
+
 $(bin_dir)/$(PROJECT_NAME).bin: $(bin_dir)/$(PROJECT_NAME).elf
 	$(V)$(objcopy) -O binary $< $@
 

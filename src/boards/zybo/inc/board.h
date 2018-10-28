@@ -63,7 +63,27 @@
 #define SECURITY4_QSPI          (SECURITY_MOD2 + 0x10)
 #define SECURITY5_MIOU          (SECURITY_MOD2 + 0x14)
 #define SECURITY6_APBSL         (SECURITY_MOD2 + 0x18)
+
+#define SECURITY6_APBSL_NS_USB1 (0x1 << 14)
+#define SECURITY6_APBSL_NS_USB0 (0x1 << 13)
+#define SECURITY6_APBSL_NS_GEM1 (0x1 << 12)
+#define SECURITY6_APBSL_NS_GEM0 (0x1 << 11)
+#define SECURITY6_APBSL_NS_SMC (0x1 << 10)
+#define SECURITY6_APBSL_NS_SPI1 (0x1 << 9)
+#define SECURITY6_APBSL_NS_SPI0 (0x1 << 8)
+#define SECURITY6_APBSL_NS_UART1 (0x1 << 7)
+#define SECURITY6_APBSL_NS_UART0 (0x1 << 6)
+#define SECURITY6_APBSL_NS_I2C1 (0x1 << 5)
+#define SECURITY6_APBSL_NS_I2C0 (0x1 << 4)
+#define SECURITY6_APBSL_NS_GPIO (0x1 << 3)
+#define SECURITY6_APBSL_NS_QPSI (0x1 << 2)
+#define SECURITY6_APBSL_NS_CAN1 (0x1 << 1)
+#define SECURITY6_APBSL_NS_CAN0 (0x1 << 0)
+
+
+
 #define SECURITY7_SMC           (SECURITY_MOD2 + 0x1C)
+
 
 #define SLCR_BASE             	0xF8000000
 #define SLCR_LOCK_KEY           0x767B
@@ -88,6 +108,16 @@
 #define SECURITY_FSSW_S0        (SECURITY_MOD3 + 0x1C)
 #define SECURITY_FSSW_S1        (SECURITY_MOD3 + 0x20)
 #define SECURITY_APB            (SECURITY_MOD3 + 0x28)
+
+
+#define MIO_BASE 0xE000A000
+#define MIO_DATA (MIO_BASE + 0x40)
+#define MIO_DIRM (MIO_BASE + 0x204)
+#define MIO_OEN (MIO_BASE + 0x208)
+
+#define MIO_PIN_07 (SLCR_BASE + 0x71C) // MIO LED on Zedboard and Zybo
+
+
 
 /**
  * TrustZone-specific initializations
